@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,6 +8,7 @@
  * @flow
  */
 
+import type { Application } from './renderApplication';
 import type { ComponentType, Node } from 'react';
 
 import invariant from 'fbjs/lib/invariant';
@@ -16,7 +17,10 @@ import renderApplication, { getApplication } from './renderApplication';
 
 type AppParams = Object;
 type Runnable = {|
-  getApplication?: (AppParams) => {| element: Node, getStyleElement: (any) => Node |},
+  getApplication?: (AppParams) => {|
+    element: Node,
+    getStyleElement: (any) => Node
+  |},
   run: (AppParams) => any
 |};
 
@@ -36,9 +40,8 @@ export type AppConfig = {
 const emptyObject = {};
 const runnables: {| [appKey: string]: Runnable |} = {};
 
-let componentProviderInstrumentationHook: ComponentProviderInstrumentationHook = (
-  component: ComponentProvider
-) => component();
+let componentProviderInstrumentationHook: ComponentProviderInstrumentationHook =
+  (component: ComponentProvider) => component();
 let wrapperComponentProvider: ?WrapperComponentProvider;
 
 /**
@@ -62,7 +65,10 @@ export default class AppRegistry {
     return runnables[appKey].getApplication(appParameters);
   }
 
-  static registerComponent(appKey: string, componentProvider: ComponentProvider): string {
+  static registerComponent(
+    appKey: string,
+    componentProvider: ComponentProvider
+  ): string {
     runnables[appKey] = {
       getApplication: (appParameters) =>
         getApplication(
@@ -70,7 +76,7 @@ export default class AppRegistry {
           appParameters ? appParameters.initialProps : emptyObject,
           wrapperComponentProvider && wrapperComponentProvider(appParameters)
         ),
-      run: (appParameters) =>
+      run: (appParameters): Application =>
         renderApplication(
           componentProviderInstrumentationHook(componentProvider),
           wrapperComponentProvider && wrapperComponentProvider(appParameters),
@@ -78,6 +84,7 @@ export default class AppRegistry {
           {
             hydrate: appParameters.hydrate || false,
             initialProps: appParameters.initialProps || emptyObject,
+            mode: appParameters.mode || 'concurrent',
             rootTag: appParameters.rootTag
           }
         )
@@ -102,8 +109,9 @@ export default class AppRegistry {
     return appKey;
   }
 
-  static runApplication(appKey: string, appParameters: Object): void {
-    const isDevelopment = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test';
+  static runApplication(appKey: string, appParameters: Object): Application {
+    const isDevelopment =
+      process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test';
     if (isDevelopment) {
       const params = { ...appParameters };
       params.rootTag = `#${params.rootTag.id}`;
@@ -122,10 +130,12 @@ export default class AppRegistry {
         'This is either due to an import error during initialization or failure to call AppRegistry.registerComponent.'
     );
 
-    runnables[appKey].run(appParameters);
+    return runnables[appKey].run(appParameters);
   }
 
-  static setComponentProviderInstrumentationHook(hook: ComponentProviderInstrumentationHook) {
+  static setComponentProviderInstrumentationHook(
+    hook: ComponentProviderInstrumentationHook
+  ) {
     componentProviderInstrumentationHook = hook;
   }
 

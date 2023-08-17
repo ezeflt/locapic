@@ -41,7 +41,7 @@ export default function PlacesScreen() {
 
    
         // ensuite j'envoie le tout en base de donnée
-        fetch(`http://172.20.10.2:3000/places/places`,{
+        fetch(`${BACKEND}/places/places`,{
           method:'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({nickname: user.nickname, name: newPlace.name, latitude: newPlace.latitude, longitude: newPlace.longitude }),
@@ -67,7 +67,7 @@ export default function PlacesScreen() {
         {/* au click de l'icon poubelle */}
         {/* je supprime la ville de la BDD ainsi que dans le reducer */}
         <FontAwesome name='trash-o' onPress={() =>{
-        fetch(`http://172.20.10.2:3000/places/places`,{
+        fetch(`${BACKEND}/places/places`,{
           method:'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({nickname: user.nickname, name: data.name})

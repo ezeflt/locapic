@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -26,7 +26,11 @@ function setValueForStyles(node, styles) {
       continue;
     }
     const isCustomProperty = styleName.indexOf('--') === 0;
-    const styleValue = dangerousStyleValue(styleName, styles[styleName], isCustomProperty);
+    const styleValue = dangerousStyleValue(
+      styleName,
+      styles[styleName],
+      isCustomProperty
+    );
     if (styleName === 'float') {
       styleName = 'cssFloat';
     }

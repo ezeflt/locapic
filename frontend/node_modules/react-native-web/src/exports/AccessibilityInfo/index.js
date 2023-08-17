@@ -1,13 +1,12 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
  */
-
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import canUseDOM from '../../modules/canUseDom';
 
 function isScreenReaderEnabled(): Promise<*> {
   return new Promise((resolve, reject) => {
@@ -22,7 +21,9 @@ const prefersReducedMotionMedia =
 
 function isReduceMotionEnabled(): Promise<*> {
   return new Promise((resolve, reject) => {
-    resolve(prefersReducedMotionMedia ? prefersReducedMotionMedia.matches : true);
+    resolve(
+      prefersReducedMotionMedia ? prefersReducedMotionMedia.matches : true
+    );
   });
 }
 

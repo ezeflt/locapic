@@ -10,9 +10,9 @@
 import type { ElementRef } from 'react';
 import type { LayoutEvent } from '../../types';
 
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import useLayoutEffect from '../useLayoutEffect';
 import UIManager from '../../exports/UIManager';
+import canUseDOM from '../canUseDom';
 
 const DOM_LAYOUT_HANDLER_NAME = '__reactLayoutHandler';
 
@@ -48,7 +48,10 @@ function getResizeObserver(): ?ResizeObserver {
       });
     }
   } else if (!didWarn) {
-    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      process.env.NODE_ENV !== 'test'
+    ) {
       console.warn(
         'onLayout relies on ResizeObserver which is not supported by your browser. ' +
           'Please include a polyfill, e.g., https://github.com/que-etc/resize-observer-polyfill.'

@@ -13,6 +13,7 @@ const roleComponents = {
   article: 'article',
   banner: 'header',
   blockquote: 'blockquote',
+  button: 'button',
   code: 'code',
   complementary: 'aside',
   contentinfo: 'footer',
@@ -25,13 +26,16 @@ const roleComponents = {
   listitem: 'li',
   main: 'main',
   navigation: 'nav',
+  paragraph: 'p',
   region: 'section',
   strong: 'strong'
 };
 
 const emptyObject = {};
 
-const propsToAccessibilityComponent = (props: Object = emptyObject): void | string => {
+const propsToAccessibilityComponent = (
+  props: Object = emptyObject
+): void | string => {
   // special-case for "label" role which doesn't map to an ARIA role
   if (props.accessibilityRole === 'label') {
     return 'label';

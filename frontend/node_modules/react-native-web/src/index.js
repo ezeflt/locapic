@@ -15,7 +15,6 @@ export { default as AppRegistry } from './exports/AppRegistry';
 export { default as AppState } from './exports/AppState';
 export { default as BackHandler } from './exports/BackHandler';
 export { default as Clipboard } from './exports/Clipboard';
-export { default as DeviceInfo } from './exports/DeviceInfo';
 export { default as Dimensions } from './exports/Dimensions';
 export { default as Easing } from './exports/Easing';
 export { default as I18nManager } from './exports/I18nManager';
@@ -62,19 +61,10 @@ export { default as VirtualizedList } from './exports/VirtualizedList';
 export { default as YellowBox } from './exports/YellowBox';
 export { default as LogBox } from './exports/LogBox';
 
-// compat (components)
-export { default as DrawerLayoutAndroid } from './exports/DrawerLayoutAndroid';
-export { default as InputAccessoryView } from './exports/InputAccessoryView';
-export { default as ToastAndroid } from './exports/ToastAndroid';
-// compat (apis)
-export { default as PermissionsAndroid } from './exports/PermissionsAndroid';
-export { default as Settings } from './exports/Settings';
-export { default as Systrace } from './exports/Systrace';
-export { default as TVEventHandler } from './exports/TVEventHandler';
-
 // plugins
 export { default as DeviceEventEmitter } from './exports/DeviceEventEmitter';
 
 // hooks
 export { default as useColorScheme } from './exports/useColorScheme';
+export { default as useLocaleContext } from './exports/useLocaleContext';
 export { default as useWindowDimensions } from './exports/useWindowDimensions';

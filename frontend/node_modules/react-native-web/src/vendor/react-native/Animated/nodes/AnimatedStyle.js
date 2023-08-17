@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,21 +15,36 @@ import AnimatedTransform from './AnimatedTransform';
 import AnimatedWithChildren from './AnimatedWithChildren';
 import NativeAnimatedHelper from '../NativeAnimatedHelper';
 
-import flattenStyle from '../../../../exports/StyleSheet/flattenStyle';
+import StyleSheet from '../../../../exports/StyleSheet';
+
+const flattenStyle = StyleSheet.flatten;
+
+function createAnimatedStyle(inputStyle: any): Object {
+  const style = flattenStyle(inputStyle);
+  const animatedStyles = {}
+  for (const key in style) {
+    const value = style[key];
+    if (key === 'transform' && Array.isArray(value)) {
+      animatedStyles[key] = new AnimatedTransform(value);
+    }
+    else if (value instanceof AnimatedNode) {
+      animatedStyles[key] = value;
+    }
+    else if (value && !Array.isArray(value) && typeof value === 'object') {
+      animatedStyles[key] = createAnimatedStyle(value);
+    }
+  }
+  return animatedStyles;
+}
 
 class AnimatedStyle extends AnimatedWithChildren {
+  _inputStyle: any;
   _style: Object;
 
   constructor(style: any) {
     super();
-    style = flattenStyle(style) || {};
-    if (style.transform) {
-      style = {
-        ...style,
-        transform: new AnimatedTransform(style.transform),
-      };
-    }
-    this._style = style;
+    this._inputStyle = style;
+    this._style = createAnimatedStyle(style);
   }
 
   // Recursively get values for nested styles (like iOS's shadowOffset)
@@ -53,8 +68,11 @@ class AnimatedStyle extends AnimatedWithChildren {
     return updatedStyle;
   }
 
-  __getValue(): Object {
-    return this._walkStyleAndGetValues(this._style);
+  __getValue(): Array<Object> {
+    return [
+      this._inputStyle,
+      this._walkStyleAndGetValues(this._style)
+    ];
   }
 
   // Recursively get animated values for nested styles (like iOS's shadowOffset)
@@ -113,8 +131,6 @@ class AnimatedStyle extends AnimatedWithChildren {
         style.__makeNative();
         styleConfig[styleKey] = style.__getNativeTag();
       }
-      // Non-animated styles are set using `setNativeProps`, no need
-      // to pass those as a part of the node config
     }
     NativeAnimatedHelper.validateStyles(styleConfig);
     return {

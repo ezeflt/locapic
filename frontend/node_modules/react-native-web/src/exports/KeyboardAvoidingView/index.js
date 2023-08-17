@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -29,7 +29,8 @@ class KeyboardAvoidingView extends React.Component<KeyboardAvoidingViewProps> {
     if (!frame || !keyboardFrame) {
       return 0;
     }
-    const keyboardY = keyboardFrame.screenY - (this.props.keyboardVerticalOffset || 0);
+    const keyboardY =
+      keyboardFrame.screenY - (this.props.keyboardVerticalOffset || 0);
     return Math.max(frame.y + frame.height - keyboardY, 0);
   }
 

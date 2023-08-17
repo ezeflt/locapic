@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -32,7 +32,13 @@ const ImageBackground: React.AbstractComponent<
   ImageBackgroundProps,
   React.ElementRef<typeof View>
 > = forwardRef((props, forwardedRef) => {
-  const { children, style = emptyObject, imageStyle, imageRef, ...rest } = props;
+  const {
+    children,
+    style = emptyObject,
+    imageStyle,
+    imageRef,
+    ...rest
+  } = props;
   const { height, width } = StyleSheet.flatten(style);
 
   return (
@@ -41,7 +47,6 @@ const ImageBackground: React.AbstractComponent<
         {...rest}
         ref={imageRef}
         style={[
-          StyleSheet.absoluteFill,
           {
             // Temporary Workaround:
             // Current (imperfect yet) implementation of <Image> overwrites width and height styles
@@ -54,6 +59,7 @@ const ImageBackground: React.AbstractComponent<
             height,
             zIndex: -1
           },
+          StyleSheet.absoluteFill,
           imageStyle
         ]}
       />

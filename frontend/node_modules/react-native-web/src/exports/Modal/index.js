@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,28 +8,42 @@
  * @flow
  */
 
+import type { ViewProps } from '../View';
+
 import * as React from 'react';
 import ModalPortal from './ModalPortal';
 import ModalAnimation from './ModalAnimation';
 import ModalContent from './ModalContent';
 import ModalFocusTrap from './ModalFocusTrap';
 
-export type ModalProps = {|
+export type ModalProps = {
+  ...ViewProps,
   animationType?: 'none' | 'slide' | 'fade',
   children: any,
   hardwareAccelerated?: ?boolean,
   onDismiss?: ?() => mixed,
-  onOrientationChange?: ?(e: {| orientation: 'portrait' | 'landscape' |}) => void,
+  onOrientationChange?: ?(e: {|
+    orientation: 'portrait' | 'landscape'
+  |}) => void,
   onRequestClose?: ?() => void,
   onShow?: ?() => void,
-  presentationStyle?: ?('fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen'),
+  presentationStyle?: ?(
+    | 'fullScreen'
+    | 'pageSheet'
+    | 'formSheet'
+    | 'overFullScreen'
+  ),
   statusBarTranslucent?: ?boolean,
   supportedOrientations?: ?Array<
-    'portrait' | 'portrait-upside-down' | 'landscape' | 'landscape-left' | 'landscape-right'
+    | 'portrait'
+    | 'portrait-upside-down'
+    | 'landscape'
+    | 'landscape-left'
+    | 'landscape-right'
   >,
   transparent?: ?boolean,
   visible?: ?boolean
-|};
+};
 
 let uniqueModalIdentifier = 0;
 
@@ -80,7 +94,8 @@ const Modal: React.AbstractComponent<
     onRequestClose,
     onShow,
     transparent,
-    visible = true
+    visible = true,
+    ...rest
   } = props;
 
   // Set a unique model identifier so we can correctly route
@@ -117,6 +132,7 @@ const Modal: React.AbstractComponent<
       >
         <ModalFocusTrap active={isActive}>
           <ModalContent
+            {...rest}
             active={isActive}
             onRequestClose={onRequestClose}
             ref={forwardedRef}

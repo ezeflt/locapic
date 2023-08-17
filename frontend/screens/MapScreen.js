@@ -9,6 +9,8 @@ export default function MapScreen() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
+  const BACKEND =  'https://locapicbackend-jf3jizwvz-ezeflt.vercel.app/';
+
   const [currentPosition, setCurrentPosition] = useState(null);
   const [tempCoordinates, setTempCoordinates] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,7 +39,7 @@ export default function MapScreen() {
   };
 
   const addBack = ()=>{
-    fetch(`http://172.20.10.2:3000/places/places`,{
+    fetch(`${BACKEND}/places/places`,{
       method:'POST',
       headers: { 'Content-Type': 'application/json' },
       // nom : reducer, name: Ville saisie, lat&long: pressData
@@ -51,7 +53,7 @@ export default function MapScreen() {
   //au chargement du composent j'envoie l'identifiant du reducer dans la BDD
   //je récupère les villes de cette utilisateur pour lui afficher
   useEffect(()=>{
-    fetch(`http://172.20.10.2:3000/places/places/${user.nickname}`)
+    fetch(`${BACKEND}/places/places/${user.nickname}`)
     .then(response=>response.json())
     .then(data=>{
       if(data.result){

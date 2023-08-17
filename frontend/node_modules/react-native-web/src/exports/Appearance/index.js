@@ -1,14 +1,13 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * @flow
  */
-
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import canUseDOM from '../../modules/canUseDom';
 
 export type ColorSchemeName = 'light' | 'dark';
 
@@ -26,14 +25,17 @@ function getQuery(): MediaQueryList | null {
 }
 
 const query = getQuery();
-const listenerMapping = new WeakMap<AppearanceListener, DOMAppearanceListener>();
+const listenerMapping = new WeakMap<
+  AppearanceListener,
+  DOMAppearanceListener
+>();
 
 const Appearance = {
   getColorScheme(): ColorSchemeName {
     return query && query.matches ? 'dark' : 'light';
   },
 
-  addChangeListener(listener: AppearanceListener): void {
+  addChangeListener(listener: AppearanceListener): { remove: () => void } {
     let mappedListener = listenerMapping.get(listener);
     if (!mappedListener) {
       mappedListener = ({ matches }: MediaQueryListEvent) => {
@@ -44,16 +46,16 @@ const Appearance = {
     if (query) {
       query.addListener(mappedListener);
     }
-  },
 
-  removeChangeListener(listener: AppearanceListener): void {
-    const mappedListener = listenerMapping.get(listener);
-    if (mappedListener) {
-      if (query) {
+    function remove(): void {
+      const mappedListener = listenerMapping.get(listener);
+      if (query && mappedListener) {
         query.removeListener(mappedListener);
       }
       listenerMapping.delete(listener);
     }
+
+    return { remove };
   }
 };
 

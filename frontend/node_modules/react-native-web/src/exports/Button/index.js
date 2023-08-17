@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,6 +12,7 @@ import * as React from 'react';
 import StyleSheet from '../StyleSheet';
 import TouchableOpacity from '../TouchableOpacity';
 import Text from '../Text';
+import { warnOnce } from '../../modules/warnOnce';
 
 type ButtonProps = {|
   accessibilityLabel?: ?string,
@@ -26,6 +27,8 @@ const Button: React.AbstractComponent<
   ButtonProps,
   React.ElementRef<typeof TouchableOpacity>
 > = React.forwardRef((props, forwardedRef) => {
+  warnOnce('Button', 'Button is deprecated. Please use Pressable.');
+
   const { accessibilityLabel, color, disabled, onPress, testID, title } = props;
 
   return (
@@ -43,7 +46,9 @@ const Button: React.AbstractComponent<
       ]}
       testID={testID}
     >
-      <Text style={[styles.text, disabled && styles.textDisabled]}>{title}</Text>
+      <Text style={[styles.text, disabled && styles.textDisabled]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 });

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,23 +8,26 @@
  * @flow
  */
 
+import type { ViewProps } from '../View';
+
 import * as React from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import View from '../View';
 import StyleSheet from '../StyleSheet';
+import canUseDOM from '../../modules/canUseDom';
 
-export type ModalContentProps = {|
+export type ModalContentProps = {
+  ...ViewProps,
   active?: ?(boolean | (() => boolean)),
   children?: any,
   onRequestClose?: ?() => void,
   transparent?: ?boolean
-|};
+};
 
 const ModalContent: React.AbstractComponent<
   ModalContentProps,
   React.ElementRef<typeof View>
 > = React.forwardRef((props, forwardedRef) => {
-  const { active, children, onRequestClose, transparent } = props;
+  const { active, children, onRequestClose, transparent, ...rest } = props;
 
   React.useEffect(() => {
     if (canUseDOM) {
@@ -42,11 +45,20 @@ const ModalContent: React.AbstractComponent<
   }, [active, onRequestClose]);
 
   const style = React.useMemo(() => {
-    return [styles.modal, transparent ? styles.modalTransparent : styles.modalOpaque];
+    return [
+      styles.modal,
+      transparent ? styles.modalTransparent : styles.modalOpaque
+    ];
   }, [transparent]);
 
   return (
-    <View accessibilityRole={active ? 'dialog' : null} aria-modal ref={forwardedRef} style={style}>
+    <View
+      {...rest}
+      aria-modal={true}
+      ref={forwardedRef}
+      role={active ? 'dialog' : null}
+      style={style}
+    >
       <View style={styles.container}>{children}</View>
     </View>
   );

@@ -15,7 +15,11 @@ type NumberOrString = number | string;
  * Animations and transitions
  */
 
-type AnimationDirection = 'alternate' | 'alternate-reverse' | 'normal' | 'reverse';
+type AnimationDirection =
+  | 'alternate'
+  | 'alternate-reverse'
+  | 'normal'
+  | 'reverse';
 type AnimationFillMode = 'none' | 'forwards' | 'backwards' | 'both';
 type AnimationIterationCount = number | 'infinite';
 type AnimationKeyframes = string | Object;
@@ -26,7 +30,10 @@ export type AnimationStyles = {|
   animationDirection?: ?(AnimationDirection | Array<AnimationDirection>),
   animationDuration?: ?(string | Array<string>),
   animationFillMode?: ?(AnimationFillMode | Array<AnimationFillMode>),
-  animationIterationCount?: ?(AnimationIterationCount | Array<AnimationIterationCount>),
+  animationIterationCount?: ?(
+    | AnimationIterationCount
+    | Array<AnimationIterationCount>
+  ),
   animationKeyframes?: ?(AnimationKeyframes | Array<AnimationKeyframes>),
   animationPlayState?: ?(AnimationPlayState | Array<AnimationPlayState>),
   animationTimingFunction?: ?(string | Array<string>),
@@ -44,29 +51,49 @@ type BorderRadiusValue = number | string;
 type BorderStyleValue = 'solid' | 'dotted' | 'dashed';
 
 export type BorderStyles = {|
+  // color
   borderColor?: ?ColorValue,
+  borderBlockColor?: ?ColorValue,
+  borderBlockEndColor?: ?ColorValue,
+  borderBlockStartColor?: ?ColorValue,
   borderBottomColor?: ?ColorValue,
-  borderEndColor?: ?ColorValue,
+  borderInlineColor?: ?ColorValue,
+  borderInlineEndColor?: ?ColorValue,
+  borderInlineStartColor?: ?ColorValue,
   borderLeftColor?: ?ColorValue,
   borderRightColor?: ?ColorValue,
-  borderStartColor?: ?ColorValue,
   borderTopColor?: ?ColorValue,
+  // radius
   borderRadius?: ?BorderRadiusValue,
-  borderBottomEndRadius?: ?BorderRadiusValue,
+  borderEndEndRadius?: ?BorderRadiusValue,
+  borderEndStartRadius?: ?BorderRadiusValue,
+  borderStartEndRadius?: ?BorderRadiusValue,
+  borderStartStartRadius?: ?BorderRadiusValue,
   borderBottomLeftRadius?: ?BorderRadiusValue,
   borderBottomRightRadius?: ?BorderRadiusValue,
-  borderBottomStartRadius?: ?BorderRadiusValue,
-  borderTopEndRadius?: ?BorderRadiusValue,
   borderTopLeftRadius?: ?BorderRadiusValue,
   borderTopRightRadius?: ?BorderRadiusValue,
-  borderTopStartRadius?: ?BorderRadiusValue,
+  // style
   borderStyle?: ?BorderStyleValue,
+  borderBlockStyle?: ?BorderStyleValue,
+  borderBlockEndStyle?: ?BorderStyleValue,
+  borderBlockStartStyle?: ?BorderStyleValue,
   borderBottomStyle?: ?BorderStyleValue,
-  borderEndStyle?: ?BorderStyleValue,
+  borderInlineStyle?: ?BorderStyleValue,
+  borderInlineEndStyle?: ?BorderStyleValue,
+  borderInlineStartStyle?: ?BorderStyleValue,
   borderLeftStyle?: ?BorderStyleValue,
   borderRightStyle?: ?BorderStyleValue,
+  borderTopStyle?: ?BorderStyleValue,
+  // deprecated
+  borderEndColor?: ?ColorValue,
+  borderStartColor?: ?ColorValue,
+  borderEndStyle?: ?BorderStyleValue,
   borderStartStyle?: ?BorderStyleValue,
-  borderTopStyle?: ?BorderStyleValue
+  borderBottomEndRadius?: ?BorderRadiusValue,
+  borderBottomStartRadius?: ?BorderRadiusValue,
+  borderTopEndRadius?: ?BorderRadiusValue,
+  borderTopStartRadius?: ?BorderRadiusValue
 |};
 
 /**
@@ -153,28 +180,47 @@ export type LayoutStyles = {|
     | 'space-between'
     | 'stretch',
   alignItems?: ?('baseline' | 'center' | 'flex-end' | 'flex-start' | 'stretch'),
-  alignSelf?: ?('auto' | 'baseline' | 'center' | 'flex-end' | 'flex-start' | 'stretch'),
-  aspectRatio?: ?number,
+  alignSelf?: ?(
+    | 'auto'
+    | 'baseline'
+    | 'center'
+    | 'flex-end'
+    | 'flex-start'
+    | 'stretch'
+  ),
+  aspectRatio?: ?NumberOrString,
   backfaceVisibility?: ?VisiblilityValue,
   borderWidth?: ?DimensionValue,
+  borderBlockWidth?: ?DimensionValue,
+  borderBlockEndWidth?: ?DimensionValue,
+  borderBlockStartWidth?: ?DimensionValue,
   borderBottomWidth?: ?DimensionValue,
-  borderEndWidth?: ?DimensionValue,
+  borderInlineWidth?: ?DimensionValue,
+  borderInlineEndWidth?: ?DimensionValue,
+  borderInlineStartWidth?: ?DimensionValue,
   borderLeftWidth?: ?DimensionValue,
   borderRightWidth?: ?DimensionValue,
-  borderStartWidth?: ?DimensionValue,
   borderTopWidth?: ?DimensionValue,
   bottom?: ?DimensionValue,
   boxSizing?: ?('border-box' | 'content-box' | 'padding-box'),
+  columnGap?: ?DimensionValue,
   direction?: ?('inherit' | 'ltr' | 'rtl'),
   display?: ?string,
-  end?: ?DimensionValue,
   flex?: ?number,
   flexBasis?: ?DimensionValue,
   flexDirection?: ?('column' | 'column-reverse' | 'row' | 'row-reverse'),
   flexGrow?: ?number,
   flexShrink?: ?number,
   flexWrap?: ?('nowrap' | 'wrap' | 'wrap-reverse'),
+  gap?: ?DimensionValue,
   height?: ?DimensionValue,
+  inset?: ?DimensionValue,
+  insetBlock?: ?DimensionValue,
+  insetBlockEnd?: ?DimensionValue,
+  insetBlockStart?: ?DimensionValue,
+  insetInline?: ?DimensionValue,
+  insetInlineEnd?: ?DimensionValue,
+  insetInlineStart?: ?DimensionValue,
   justifyContent?: ?(
     | 'center'
     | 'flex-end'
@@ -185,14 +231,16 @@ export type LayoutStyles = {|
   ),
   left?: ?DimensionValue,
   margin?: ?DimensionValue,
+  marginBlock?: ?DimensionValue,
+  marginBlockEnd?: ?DimensionValue,
+  marginBlockStart?: ?DimensionValue,
   marginBottom?: ?DimensionValue,
-  marginHorizontal?: ?DimensionValue,
-  marginEnd?: ?DimensionValue,
+  marginInline?: ?DimensionValue,
+  marginInlineEnd?: ?DimensionValue,
+  marginInlineStart?: ?DimensionValue,
   marginLeft?: ?DimensionValue,
   marginRight?: ?DimensionValue,
-  marginStart?: ?DimensionValue,
   marginTop?: ?DimensionValue,
-  marginVertical?: ?DimensionValue,
   maxHeight?: ?DimensionValue,
   maxWidth?: ?DimensionValue,
   minHeight?: ?DimensionValue,
@@ -202,17 +250,19 @@ export type LayoutStyles = {|
   overflowX?: ?OverflowValue,
   overflowY?: ?OverflowValue,
   padding?: ?DimensionValue,
+  paddingBlock?: ?DimensionValue,
+  paddingBlockEnd?: ?DimensionValue,
+  paddingBlockStart?: ?DimensionValue,
   paddingBottom?: ?DimensionValue,
-  paddingHorizontal?: ?DimensionValue,
-  paddingEnd?: ?DimensionValue,
+  paddingInline?: ?DimensionValue,
+  paddingInlineEnd?: ?DimensionValue,
+  paddingInlineStart?: ?DimensionValue,
   paddingLeft?: ?DimensionValue,
   paddingRight?: ?DimensionValue,
-  paddingStart?: ?DimensionValue,
   paddingTop?: ?DimensionValue,
-  paddingVertical?: ?DimensionValue,
   position?: ?('absolute' | 'fixed' | 'relative' | 'static' | 'sticky'),
   right?: ?DimensionValue,
-  start?: ?DimensionValue,
+  rowGap?: ?DimensionValue,
   top?: ?DimensionValue,
   visibility?: ?VisiblilityValue,
   width?: ?DimensionValue,
@@ -231,7 +281,22 @@ export type LayoutStyles = {|
   gridRowStart?: ?string,
   gridTemplateColumns?: ?string,
   gridTemplateRows?: ?string,
-  gridTemplateAreas?: ?string
+  gridTemplateAreas?: ?string,
+  /**
+   * @deprecated
+   */
+  borderEndWidth?: ?DimensionValue,
+  borderStartWidth?: ?DimensionValue,
+  end?: ?DimensionValue,
+  marginHorizontal?: ?DimensionValue,
+  marginEnd?: ?DimensionValue,
+  marginStart?: ?DimensionValue,
+  marginVertical?: ?DimensionValue,
+  paddingHorizontal?: ?DimensionValue,
+  paddingStart?: ?DimensionValue,
+  paddingEnd?: ?DimensionValue,
+  paddingVertical?: ?DimensionValue,
+  start?: ?DimensionValue
 |};
 
 /**
@@ -239,8 +304,9 @@ export type LayoutStyles = {|
  */
 
 export type ShadowStyles = {|
+  // @deprecated
   shadowColor?: ?ColorValue,
-  shadowOffset?: {|
+  shadowOffset?: ?{|
     width?: DimensionValue,
     height?: DimensionValue
   |},
@@ -255,24 +321,26 @@ export type ShadowStyles = {|
 export type TransformStyles = {|
   perspective?: ?NumberOrString,
   perspectiveOrigin?: ?string,
-  transform?: Array<
-    | {| +perspective: NumberOrString |}
-    | {| +rotate: string |}
-    | {| +rotateX: string |}
-    | {| +rotateY: string |}
-    | {| +rotateZ: string |}
-    | {| +scale: number |}
-    | {| +scaleX: number |}
-    | {| +scaleY: number |}
-    | {| +scaleZ: number |}
-    | {| +scale3d: string |}
-    | {| +skewX: string |}
-    | {| +skewY: string |}
-    | {| +translateX: NumberOrString |}
-    | {| +translateY: NumberOrString |}
-    | {| +translateZ: NumberOrString |}
-    | {| +translate3d: string |}
-  >,
+  transform?:
+    | ?string
+    | Array<
+        | {| +perspective: NumberOrString |}
+        | {| +rotate: string |}
+        | {| +rotateX: string |}
+        | {| +rotateY: string |}
+        | {| +rotateZ: string |}
+        | {| +scale: number |}
+        | {| +scaleX: number |}
+        | {| +scaleY: number |}
+        | {| +scaleZ: number |}
+        | {| +scale3d: string |}
+        | {| +skewX: string |}
+        | {| +skewY: string |}
+        | {| +translateX: NumberOrString |}
+        | {| +translateY: NumberOrString |}
+        | {| +translateZ: NumberOrString |}
+        | {| +translate3d: string |}
+      >,
   transformOrigin?: ?string,
   transformStyle?: ?('flat' | 'preserve-3d')
 |};

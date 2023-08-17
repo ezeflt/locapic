@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -35,34 +35,78 @@ export type TextStyle = {
   fontStyle?: 'italic' | 'normal',
   fontWeight?: ?FontWeightValue,
   fontVariant?: $ReadOnlyArray<
-    'small-caps' | 'oldstyle-nums' | 'lining-nums' | 'tabular-nums' | 'proportional-nums'
+    | 'small-caps'
+    | 'oldstyle-nums'
+    | 'lining-nums'
+    | 'tabular-nums'
+    | 'proportional-nums'
   >,
   letterSpacing?: ?NumberOrString,
   lineHeight?: ?NumberOrString,
-  textAlign?: 'center' | 'end' | 'inherit' | 'justify' | 'justify-all' | 'left' | 'right' | 'start',
-  textAlignVertical?: ?string,
+  textAlign?:
+    | 'center'
+    | 'end'
+    | 'inherit'
+    | 'justify'
+    | 'justify-all'
+    | 'left'
+    | 'right'
+    | 'start',
   textDecorationColor?: ?ColorValue,
-  textDecorationLine?: 'none' | 'underline' | 'line-through' | 'underline line-through',
+  textDecorationLine?:
+    | 'none'
+    | 'underline'
+    | 'line-through'
+    | 'underline line-through',
   textDecorationStyle?: 'solid' | 'double' | 'dotted' | 'dashed',
   textIndent?: ?NumberOrString,
   textOverflow?: ?string,
-  textRendering?: 'auto' | 'geometricPrecision' | 'optimizeLegibility' | 'optimizeSpeed',
+  textRendering?:
+    | 'auto'
+    | 'geometricPrecision'
+    | 'optimizeLegibility'
+    | 'optimizeSpeed',
+  textShadow?: ?string,
   textShadowColor?: ?ColorValue,
   textShadowOffset?: {| width?: number, height?: number |},
   textShadowRadius?: ?number,
   textTransform?: 'capitalize' | 'lowercase' | 'none' | 'uppercase',
-  unicodeBidi?: 'normal' | 'bidi-override' | 'embed' | 'isolate' | 'isolate-override' | 'plaintext',
+  unicodeBidi?:
+    | 'normal'
+    | 'bidi-override'
+    | 'embed'
+    | 'isolate'
+    | 'isolate-override'
+    | 'plaintext',
+  userSelect?: 'none' | 'text',
+  verticalAlign?: ?string,
   whiteSpace?: ?string,
   wordBreak?: 'normal' | 'break-all' | 'break-word' | 'keep-all',
   wordWrap?: ?string,
   writingDirection?: 'auto' | 'ltr' | 'rtl',
   /* @platform web */
   MozOsxFontSmoothing?: ?string,
-  WebkitFontSmoothing?: ?string
+  WebkitFontSmoothing?: ?string,
+  // deprecated
+  textAlignVertical?: ?string
 };
 
 export type TextProps = {
   ...ViewProps,
+  dir?: 'auto' | 'ltr' | 'rtl',
+  numberOfLines?: ?number,
+  role?:
+    | 'button'
+    | 'header'
+    | 'heading'
+    | 'label'
+    | 'link'
+    | 'listitem'
+    | 'none'
+    | 'text',
+  style?: GenericStyleProp<TextStyle>,
+  testID?: ?string,
+  // @deprecated
   accessibilityRole?:
     | 'button'
     | 'header'
@@ -72,23 +116,6 @@ export type TextProps = {
     | 'listitem'
     | 'none'
     | 'text',
-  accessibilityState?: {
-    busy?: ?boolean,
-    checked?: ?boolean | 'mixed',
-    disabled?: ?boolean,
-    expanded?: ?boolean,
-    grabbed?: ?boolean,
-    hidden?: ?boolean,
-    invalid?: ?boolean,
-    pressed?: ?boolean,
-    readonly?: ?boolean,
-    required?: ?boolean,
-    selected?: ?boolean
-  },
-  dir?: 'auto' | 'ltr' | 'rtl',
-  numberOfLines?: ?number,
   onPress?: (e: any) => void,
-  selectable?: boolean,
-  style?: GenericStyleProp<TextStyle>,
-  testID?: ?string
+  selectable?: boolean
 };

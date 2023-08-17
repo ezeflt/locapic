@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,9 +11,9 @@
 import type { ViewProps } from '../View';
 
 import * as React from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
+import canUseDOM from '../../modules/canUseDom';
 
 const cssFunction: 'constant' | 'env' = (function () {
   if (
@@ -32,7 +32,7 @@ const SafeAreaView: React.AbstractComponent<
   React.ElementRef<typeof View>
 > = React.forwardRef((props, ref) => {
   const { style, ...rest } = props;
-  return <View {...rest} ref={ref} style={StyleSheet.compose(styles.root, style)} />;
+  return <View {...rest} ref={ref} style={[styles.root, style]} />;
 });
 
 SafeAreaView.displayName = 'SafeAreaView';

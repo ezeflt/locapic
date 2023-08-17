@@ -36,32 +36,24 @@ const ProgressBar: React.AbstractComponent<
   } = props;
 
   const percentageProgress = progress * 100;
-
-  const progressRef = React.useRef(null);
-  React.useEffect(() => {
-    const width = indeterminate ? '25%' : `${percentageProgress}%`;
-    if (progressRef.current != null) {
-      progressRef.current.setNativeProps({
-        style: { width }
-      });
-    }
-  }, [indeterminate, percentageProgress, progressRef]);
+  const width = indeterminate ? '25%' : `${percentageProgress}%`;
 
   return (
     <View
       {...other}
-      accessibilityRole="progressbar"
-      accessibilityValue={{
-        max: 100,
-        min: 0,
-        now: indeterminate ? null : percentageProgress
-      }}
+      aria-valuemax={100}
+      aria-valuemin={0}
+      aria-valuenow={indeterminate ? null : percentageProgress}
       ref={ref}
+      role="progressbar"
       style={[styles.track, style, { backgroundColor: trackColor }]}
     >
       <View
-        ref={progressRef}
-        style={[styles.progress, indeterminate && styles.animation, { backgroundColor: color }]}
+        style={[
+          { backgroundColor: color, width },
+          styles.progress,
+          indeterminate && styles.animation
+        ]}
       />
     </View>
   );
@@ -86,8 +78,8 @@ const styles = StyleSheet.create({
     animationDuration: '1s',
     animationKeyframes: [
       {
-        '0%': { transform: [{ translateX: '-100%' }] },
-        '100%': { transform: [{ translateX: '400%' }] }
+        '0%': { transform: 'translateX(-100%)' },
+        '100%': { transform: 'translateX(400%)' }
       }
     ],
     animationTimingFunction: 'linear',

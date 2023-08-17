@@ -22,12 +22,19 @@ const accessibilityRoleToWebRole = {
   text: null
 };
 
-const propsToAriaRole = ({ accessibilityRole }: { accessibilityRole?: string }): string | void => {
-  if (accessibilityRole) {
-    const inferredRole = accessibilityRoleToWebRole[accessibilityRole];
+const propsToAriaRole = ({
+  accessibilityRole,
+  role
+}: {
+  accessibilityRole?: string,
+  role?: string
+}): string | void => {
+  const _role = role || accessibilityRole;
+  if (_role) {
+    const inferredRole = accessibilityRoleToWebRole[_role];
     if (inferredRole !== null) {
       // ignore roles that don't map to web
-      return inferredRole || accessibilityRole;
+      return inferredRole || _role;
     }
   }
 };

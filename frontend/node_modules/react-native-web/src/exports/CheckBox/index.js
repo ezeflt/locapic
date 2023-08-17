@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,6 +22,7 @@ type CheckBoxProps = {
   disabled?: boolean,
   onChange?: ?(e: any) => void,
   onValueChange?: ?(e: any) => void,
+  readOnly?: boolean,
   value?: boolean
 };
 
@@ -29,7 +30,17 @@ const CheckBox: React.AbstractComponent<
   CheckBoxProps,
   React.ElementRef<typeof View>
 > = React.forwardRef((props, forwardedRef) => {
-  const { color, disabled, onChange, onValueChange, style, value, ...other } = props;
+  const {
+    'aria-readonly': ariaReadOnly,
+    color,
+    disabled,
+    onChange,
+    onValueChange,
+    readOnly,
+    style,
+    value,
+    ...other
+  } = props;
 
   function handleChange(event: Object) {
     const value = event.nativeEvent.target.checked;
@@ -55,6 +66,10 @@ const CheckBox: React.AbstractComponent<
     checked: value,
     disabled: disabled,
     onChange: handleChange,
+    readOnly:
+      readOnly === true ||
+      ariaReadOnly === true ||
+      other.accessibilityReadOnly === true,
     ref: forwardedRef,
     style: [styles.nativeControl, styles.cursorInherit],
     type: 'checkbox'
@@ -63,7 +78,8 @@ const CheckBox: React.AbstractComponent<
   return (
     <View
       {...other}
-      accessibilityDisabled={disabled}
+      aria-disabled={disabled}
+      aria-readonly={ariaReadOnly}
       style={[styles.root, style, disabled && styles.cursorDefault]}
     >
       {fakeControl}
@@ -116,7 +132,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     height: '100%',
     margin: 0,
-    opacity: 0,
+    appearance: 'none',
     padding: 0,
     width: '100%'
   }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,6 @@
 'use strict';
 
 import infoLog from '../infoLog';
-import performanceNow from 'fbjs/lib/performanceNow';
 
 type Handler = {
   onIterate?: () => void,
@@ -39,7 +38,7 @@ const JSEventLoopWatchdog = {
     totalStallTime = 0;
     stallCount = 0;
     longestStall = 0;
-    lastInterval = performanceNow();
+    lastInterval = window.performance.now();
   },
   addHandler: function(handler: Handler) {
     handlers.push(handler);
@@ -50,9 +49,9 @@ const JSEventLoopWatchdog = {
       return;
     }
     installed = true;
-    lastInterval = performanceNow();
+    lastInterval = window.performance.now();
     function iteration() {
-      const now = performanceNow();
+      const now = window.performance.now();
       const busyTime = now - lastInterval;
       if (busyTime >= thresholdMS) {
         const stallTime = busyTime - thresholdMS;

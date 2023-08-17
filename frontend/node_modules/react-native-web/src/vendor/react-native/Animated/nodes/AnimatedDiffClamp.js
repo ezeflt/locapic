@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,11 +10,13 @@
 
 'use strict';
 
+import type AnimatedNode from './AnimatedNode';
+
 import AnimatedInterpolation from './AnimatedInterpolation';
-import AnimatedNode from './AnimatedNode';
 import AnimatedWithChildren from './AnimatedWithChildren';
 
 import type {InterpolationConfigType} from './AnimatedInterpolation';
+import type {PlatformConfig} from '../AnimatedPlatformConfig';
 
 class AnimatedDiffClamp extends AnimatedWithChildren {
   _a: AnimatedNode;
@@ -32,12 +34,14 @@ class AnimatedDiffClamp extends AnimatedWithChildren {
     this._value = this._lastValue = this._a.__getValue();
   }
 
-  __makeNative() {
-    this._a.__makeNative();
-    super.__makeNative();
+  __makeNative(platformConfig: ?PlatformConfig) {
+    this._a.__makeNative(platformConfig);
+    super.__makeNative(platformConfig);
   }
 
-  interpolate(config: InterpolationConfigType): AnimatedInterpolation {
+  interpolate<OutputT: number | string>(
+    config: InterpolationConfigType<OutputT>,
+  ): AnimatedInterpolation<OutputT> {
     return new AnimatedInterpolation(this, config);
   }
 

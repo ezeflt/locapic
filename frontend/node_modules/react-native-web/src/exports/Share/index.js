@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -24,7 +24,10 @@ class Share {
       typeof content.url === 'string' || typeof content.message === 'string',
       'At least one of URL and message is required'
     );
-    invariant(typeof options === 'object' && options !== null, 'Options must be a valid object');
+    invariant(
+      typeof options === 'object' && options !== null,
+      'Options must be a valid object'
+    );
     invariant(
       !content.title || typeof content.title === 'string',
       'Invalid title: title should be a string.'
@@ -37,7 +40,9 @@ class Share {
         url: content.url
       });
     } else {
-      return Promise.reject(new Error('Share is not supported in this browser'));
+      return Promise.reject(
+        new Error('Share is not supported in this browser')
+      );
     }
   }
 

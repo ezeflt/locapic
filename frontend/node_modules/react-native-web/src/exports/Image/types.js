@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,16 +9,7 @@
  */
 
 import type { ColorValue, GenericStyleProp } from '../../types';
-import type { ViewProps } from '../View/types';
-
-import type {
-  AnimationStyles,
-  BorderStyles,
-  InteractionStyles,
-  LayoutStyles,
-  ShadowStyles,
-  TransformStyles
-} from '../../types/styles';
+import type { ViewProps, ViewStyle } from '../View/types';
 
 type SourceObject = {
   /**
@@ -77,21 +68,19 @@ type SourceObject = {
   width?: number
 };
 
-export type ResizeMode = 'center' | 'contain' | 'cover' | 'none' | 'repeat' | 'stretch';
+export type ResizeMode =
+  | 'center'
+  | 'contain'
+  | 'cover'
+  | 'none'
+  | 'repeat'
+  | 'stretch';
 
 export type Source = number | string | SourceObject | Array<SourceObject>;
 
 export type ImageStyle = {
-  ...AnimationStyles,
-  ...BorderStyles,
-  ...InteractionStyles,
-  ...LayoutStyles,
-  ...ShadowStyles,
-  ...TransformStyles,
-  backgroundColor?: ColorValue,
-  boxShadow?: string,
-  filter?: string,
-  opacity?: number,
+  ...ViewStyle,
+  // @deprecated
   resizeMode?: ResizeMode,
   tintColor?: ColorValue
 };
@@ -109,5 +98,6 @@ export type ImageProps = {
   onProgress?: (e: any) => void,
   resizeMode?: ResizeMode,
   source?: Source,
-  style?: GenericStyleProp<ImageStyle>
+  style?: GenericStyleProp<ImageStyle>,
+  tintColor?: ColorValue
 };
