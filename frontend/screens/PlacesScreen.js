@@ -1,81 +1,62 @@
 import { useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPlace, removePlace } from '../reducers/user';
 
 export default function PlacesScreen() {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
 
-  const [name,setName] = useState('')
-  const [longitude,setLongitude] = useState(null)
-  const [latitude,setLatitude] = useState(null)
+  const dispatch = useDispatch(); // initialise dispatch
+  const user = useSelector((state) => state.user.value); // initialise the user local storage
 
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState(''); // the state to hold the value of city input
 
-  const handleSubmit = () => {
-    // si le champ ===0 stop la fonction
-    if (city.length === 0) {
+  /**
+   * Description :
+   * add a city and its location to the databse
+   */
+  function handleSubmit()
+  {
+    // check if the length of city value is greater than 0 
+    if(city.length === 0)
       return;
-    }
-
-    //depuis le nom de la ville je cherche sa lat, long, nom(corrigé)
+    
+    // GET city data with this API
     fetch(`https://api-adresse.data.gouv.fr/search/?q=${city}`)
-      .then((response) => response.json())
+      .then((response) => response.json()) // convert data to JSON
       .then((data) => {
-        const firstCity = data.features[0];
+        const firstCity = data.features[0]; // GET the first city to find
+
         const newPlace = {
-          name: (firstCity.properties.city),
-          latitude: (firstCity.geometry.coordinates[1]),
-          longitude: (firstCity.geometry.coordinates[0]),
+          name: (firstCity.properties.city), // store the city name
+          latitude: (firstCity.geometry.coordinates[1]), // store the city latitude
+          longitude: (firstCity.geometry.coordinates[0]), // store the city longitude
         };
 
-   
-        // ensuite j'envoie le tout en base de donnée
-        fetch(`${BACKEND}/places/places`,{
+        // POST the place to the database
+        fetch(`https://locapicbackend-4dc272s0f-ezeflt.vercel.app/places/add`,{
           method:'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({nickname: user.nickname, name: newPlace.name, latitude: newPlace.latitude, longitude: newPlace.longitude }),
         })
-
-        .then(response=>response.json())
-        .then(data=>{
-          console.log(data)
-          // si l'opération c'est bien passé -> ajoute dans le reducer et reset les champs
-          dispatch(addPlace(newPlace));
-          setCity('');
-        })
+        dispatch(addPlace(newPlace)); // add the place to the user's place local storage
+        setCity(''); // reset the city input value
       });
   };
 
-  const places = user.places.map((data, i) => {
-    return (
-      <View key={i} style={styles.card}>
-        <View>
-          <Text style={styles.name}>{data.name}</Text>
-          <Text>LAT : {Number(data.latitude).toFixed(3)} LON : {Number(data.longitude).toFixed(3)}</Text>
-        </View>
-        {/* au click de l'icon poubelle */}
-        {/* je supprime la ville de la BDD ainsi que dans le reducer */}
-        <FontAwesome name='trash-o' onPress={() =>{
-        fetch(`${BACKEND}/places/places`,{
-          method:'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({nickname: user.nickname, name: data.name})
-        })
-        dispatch(removePlace(data.name))}} size={25} color='#ec6e5b' />
-      </View>
-    );
-  });
+  /**
+   * Descrption :
+   * delete a place to the databse
+   */
+  function deletePlace (data)
+  {
+    fetch(`https://locapicbackend-4dc272s0f-ezeflt.vercel.app/places/delete`,{
+      method:'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({nickname: user.nickname, name: data.name})
+    })
+    dispatch(removePlace(data.name)); // remove the place of the local storage
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -89,7 +70,18 @@ export default function PlacesScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {places}
+        {/* loop to the places array from the local storage */}
+        {user.places.map((data, i) => {
+          return (
+            <View key={i} style={styles.card}>
+              <View>
+                <Text style={styles.name}>{data.name}</Text>
+                <Text>LAT : {Number(data.latitude).toFixed(3)} LON : {Number(data.longitude).toFixed(3)}</Text>
+              </View>
+              <FontAwesome name='trash-o' onPress={()=>deletePlace(data)} size={25} color='#ec6e5b' />
+            </View>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );

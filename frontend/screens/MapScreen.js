@@ -6,94 +6,91 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 export default function MapScreen() {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
 
-  const BACKEND =  'https://locapicbackend-jf3jizwvz-ezeflt.vercel.app/';
+  const dispatch = useDispatch(); // initialise dispatch
+  const user = useSelector((state) => state.user.value); // initialise the user local storage
 
-  const [currentPosition, setCurrentPosition] = useState(null);
-  const [tempCoordinates, setTempCoordinates] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newPlace, setNewPlace] = useState('');
+  const [currentPosition, setCurrentPosition] = useState(null); // the state to hold value of the current position
+  const [tempCoordinates, setTempCoordinates] = useState(null); // the state to hold value of coorinates
+  const [modalVisible, setModalVisible] = useState(false);      // the state to hold the value of modal visible
+  const [newPlace, setNewPlace] = useState('');                 // the state to hold the value of input place
 
-  // au chargement du composant je demande la permission d'acces à la localisation
-  //chaque 10sec je récupère les coordonées
+  /**
+   * Description :
+   * when the coponent is monted, requests user location
+   */
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
+      // if the response is valided
       if (status === 'granted') {
-        Location.watchPositionAsync({ distanceInterval: 10 },
+        Location.watchPositionAsync({ distanceInterval: 10 }, // each 10 secondes GET the user position
           (location) => {
-            setCurrentPosition(location.coords);
+            setCurrentPosition(location.coords); // GET the current posotion
           });
       }
     })();
   }, []);
 
-  
-  //long press sur l'écran qui active la modale et qui obtient les coordonnée pour les ajouter en BDD 
-  const handleLongPress = (e) => {
-    setTempCoordinates(e.nativeEvent.coordinate);
-    setModalVisible(true);
-  };
-
-  const addBack = ()=>{
-    fetch(`${BACKEND}/places/places`,{
-      method:'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // nom : reducer, name: Ville saisie, lat&long: pressData
-      body: JSON.stringify({nickname: user.nickname, name: newPlace, latitude: tempCoordinates.latitude, longitude: tempCoordinates.longitude }),
-    })
-    .then(response=>response.json())
-    .then(data=>{
-      console.log(data)
-    })
-  }
-  //au chargement du composent j'envoie l'identifiant du reducer dans la BDD
-  //je récupère les villes de cette utilisateur pour lui afficher
+  /**
+   * Description :
+   * when the component is mounted, GET user places from the database
+   */
   useEffect(()=>{
-    fetch(`${BACKEND}/places/places/${user.nickname}`)
+    fetch(`https://locapicbackend-4dc272s0f-ezeflt.vercel.app/places/places/${user.nickname}`)
     .then(response=>response.json())
     .then(data=>{
       if(data.result){
-        const newTab = data.places.map((data,i)=>{
+        // loop through all user place
+        const userPlaces = data.places.map((data)=>{
           return({
-            name: data.name,
-            longitude: data.longitude,
-            latitude: data.latitude,
+            name: data.name,            // GET each city name
+            longitude: data.longitude,  // GET each longitude
+            latitude: data.latitude,    // GET each latitude
           })
         })
-        if(newTab){
-          dispatch(ecrasePlace(newTab))
-        }else{
-          console('new tab error data no recup')
-        }
+        // if userPlace is not empty, add every place to the local storage else log this
+        userPlaces ? dispatch(ecrasePlace(userPlaces)) : console.log('new tab error data no recup');
       }
     })
   },[])
 
 
+  /**
+   * Description :
+   * add a created place to the database
+   */
+  function addBack()
+  {
+    fetch(`https://locapicbackend-4dc272s0f-ezeflt.vercel.app/places/add`,{
+      method:'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // datas post
+      body: JSON.stringify({
+        nickname: user.nickname,             // username
+        name: newPlace,                      // city name
+        latitude: tempCoordinates.latitude,  // latitude selected
+        longitude: tempCoordinates.longitude // longitude selected
+      }),
+    })
+  }
+
   const handleNewPlace = () => {
-    // ajoute dans la BDD
-    // ajoute dans le reducer
-    // ferme la modal
-    // reset les champs
-    addBack()
-    dispatch(addPlace({ name: newPlace, latitude: tempCoordinates.latitude, longitude: tempCoordinates.longitude }));
-    setModalVisible(false);
-    setNewPlace('');
-  };
 
-  const handleClose = () => {
-    // ferme la modal et reset le champ
-    setModalVisible(false);
-    setNewPlace('');
-  };
+    // add the place to the database
+    addBack();
 
-  const markers = user.places.map((data, i) => {
-    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
-  });
+    // add the place to the local storage
+    dispatch(addPlace({ 
+      name: newPlace, 
+      latitude: tempCoordinates.latitude, 
+      longitude: tempCoordinates.longitude 
+    }));
+
+    setModalVisible(false); // do not display the modal
+    setNewPlace('');        // reset the place input value
+  };
 
   return (
     <View style={styles.container}>
@@ -104,16 +101,20 @@ export default function MapScreen() {
             <TouchableOpacity onPress={() => handleNewPlace()} style={styles.button} activeOpacity={0.8}>
               <Text style={styles.textButton}>Add</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleClose()} style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity onPress={() => {setModalVisible(false), setNewPlace('')}} style={styles.button} activeOpacity={0.8}>
               <Text style={styles.textButton}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      <MapView onLongPress={(e) => handleLongPress(e)} mapType="hybrid" style={styles.map}>
+      <MapView onLongPress={(e) => {setTempCoordinates(e.nativeEvent.coordinate), setModalVisible(true)}} mapType="hybrid" style={styles.map}>
+        {/* if the current position is not emtpy then display the marker with the current position */}
         {currentPosition && <Marker coordinate={currentPosition} title="My position" pinColor="#fecb2d" />}
-        {markers}
+        {/* loop through the places and return the places with markers  */}
+        {user.places.map((data, i) => {
+          return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
+        })}
       </MapView>
     </View>
   );

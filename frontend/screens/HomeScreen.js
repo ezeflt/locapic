@@ -1,35 +1,29 @@
 import { useState } from 'react';
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity,} from 'react-native';
 import { useDispatch } from 'react-redux';
 import { updateNickname } from '../reducers/user';
 
 export default function HomeScreen({ navigation }) {
-  const dispatch = useDispatch();
 
-  const [nickname, setNickname] = useState('');
+  const dispatch = useDispatch(); // initialise dispatch
 
-  const handleSubmit = () => {
+  const [nickname, setNickname] = useState(''); // the state to hold value of the nickname input
+
+  /**
+   * Description :
+   * add the nickname to the local storage
+   * navigate to the map page
+   */
+  function handleSubmit(){
     dispatch(updateNickname(nickname));
     navigation.navigate('TabNavigator');
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      {/* chargement de l'image */}
       <Image style={styles.image} source={require('../assets/home-image.jpg')} />
-      {/* text présentation */}
       <Text style={styles.title}>Welcome to Locapic</Text>
-      {/* input user pour l'identifier en base de donnée */}
       <TextInput placeholder="Nickname" onChangeText={(value) => setNickname(value)} value={nickname} style={styles.input} />
-      {/* boutton qui envoie le user dans le reducer et redirige vers TabNavigator */}
       <TouchableOpacity onPress={() => handleSubmit()} style={styles.button} activeOpacity={0.8}>
         <Text style={styles.textButton}>Go to map</Text>
       </TouchableOpacity>
