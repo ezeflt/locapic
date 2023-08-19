@@ -70,7 +70,7 @@ Vous devriez voir ceci
   <img src="./frontend/assets/readmeImg/placePage.png" alt="Time clock" width="30%" />
 </div>
 <div id="" align="center">
-  <img src="./frontend/assets/readmeImg/gif.gif" alt="Time clock" width="50%" />
+  <img src="./frontend/assets/readmeImg/gif.gif" alt="Time clock" width="30%" />
 </div>
 
 # Développeur 
