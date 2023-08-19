@@ -30,7 +30,7 @@ Pour tester l'applications il vous faut :
 2. Si vous avez un iphone, scannez le Qr code iphone
 
 <div id="" align="start">
-<div style="display: flex; justify-content: space-around; width:80%"><h4>Android QR code<h4> <h4>Iphone QR code<h4></div>
+<div style="flex-direction :row;display: flex; justify-content: space-around; width:80%"><h4>Android QR code<h4> <h4>Iphone QR code<h4></div>
   <img src="./frontend/assets/readmeImg/locapicQrCodeAndroid.svg" alt="Time clock" width="40%" />
     <img src="./frontend/assets/readmeImg/locapicQrCodeIphone.svg" alt="Time clock" width="40%" />
 </div>
