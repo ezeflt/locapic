@@ -1,1 +1,9 @@
-./node_modules
+# Ignore node_modules directory
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore build or dist directories (if applicable)
+/build/
+/dist/
