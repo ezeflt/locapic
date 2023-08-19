@@ -24,7 +24,7 @@ Pour tester l'applications il vous faut :
     <img src="./frontend/assets/readmeImg/playStoreF.png" alt="Time clock" width="20%" />
 </div>
 
-# Tester l'applications en ligne
+# Testez l'application en ligne
 
 1. Si vous avez un android, scannez le Qr code android
 2. Si vous avez un iphone, scannez le Qr code iphone
